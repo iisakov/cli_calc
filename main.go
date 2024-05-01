@@ -16,7 +16,7 @@ func main() {
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 
-	fmt.Println("Введите выражение или команду (h):")
+	fmt.Println("Введите выражение или команду (-h):")
 
 	for {
 		command, err := in.ReadString('\n')
@@ -81,8 +81,8 @@ func main() {
 			}
 
 			for _, num := range nums {
-				if num.NumVal > 10 {
-					comandHandler.PrintErrorAndExit("Одно из чисел больше 10.")
+				if num.NumVal > 10 || num.NumVal < 1 {
+					comandHandler.PrintErrorAndExit("Одно из чисел больше 10 или меньше 1.")
 				}
 			}
 
@@ -101,7 +101,7 @@ func main() {
 			}
 
 		} else {
-			comandHandler.PrintErrorAndExit("Неизвестная команда.")
+			comandHandler.PrintError("Неизвестная команда.")
 		}
 
 	}
