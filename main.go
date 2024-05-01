@@ -5,6 +5,7 @@ import (
 	comandHandler "cli_calc/SDK"
 	"cli_calc/SDK/NumSysTransform"
 	"cli_calc/SDK/model"
+	"cli_calc/config"
 	"fmt"
 	"os"
 	"strconv"
@@ -38,6 +39,11 @@ func main() {
 				fallthrough
 			case "-q\n":
 				comandHandler.Exit()
+
+			case "version\n":
+				fallthrough
+			case "-v\n":
+				comandHandler.PrintMessage("cli_calc [by_artisan] v:" + config.CalcVersion)
 
 			default:
 				comandHandler.PrintError("Неизвестная команда.")
