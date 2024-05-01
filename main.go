@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	comandHandler "cli_calc/SDK"
-	"cli_calc/SDK/NumSysTransform"
 	"fmt"
 	"os"
 	"strings"
@@ -39,12 +38,16 @@ func main() {
 			}
 
 		} else if len(comandSlice) == 3 {
-			result, err := NumSysTransform.RtoA(comandSlice[0])
+			isValidOperator, err := comandHandler.CheckOperator(comandSlice[1])
 			if err != nil {
 				fmt.Println(err.Error())
 				comandHandler.PrintErrorAndExit(err.Error())
 			}
-			fmt.Println(result)
+			if !isValidOperator {
+				comandHandler.PrintErrorAndExit("Неверный символ действия выражения")
+			}
+		} else {
+			comandHandler.PrintErrorAndExit("Неизвестная команда.")
 		}
 
 	}

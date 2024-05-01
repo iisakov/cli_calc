@@ -3,6 +3,7 @@ package comandHandler
 import (
 	"fmt"
 	"os"
+	"regexp"
 )
 
 func PrintHelp() {
@@ -23,7 +24,9 @@ func PrintErrorAndExit(messages ...string) {
 	for _, message := range messages {
 		response += message + "\n"
 	}
-	response += "Произошла непредвиденная ошибка, утилита закрыта."
+	response += "Утилита закрыта."
+
+	fmt.Println(response)
 	os.Exit(1)
 }
 
@@ -36,4 +39,12 @@ func Exit(messages ...string) {
 
 	fmt.Println(response)
 	os.Exit(0)
+}
+
+func CheckOperator(s string) (bool, error) {
+	result, err := regexp.MatchString(`^[\+\-\:\*\/]$`, s)
+	if err != nil {
+		return false, err
+	}
+	return result, nil
 }
