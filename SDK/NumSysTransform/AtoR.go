@@ -15,7 +15,7 @@ func AtoR(arabianNum int) (result string, err error) {
 	for {
 		for _, decimalVal := range keys {
 			if arabianNum >= decimalVal {
-				result += model.ArabianGlyphs[decimalVal] + " "
+				result += model.ArabianGlyphs[decimalVal]
 				arabianNum -= decimalVal
 				break
 			}

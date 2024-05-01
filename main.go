@@ -16,7 +16,7 @@ func main() {
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 
-	fmt.Println("Введите выражение:")
+	fmt.Println("Введите выражение или команду (h):")
 
 	for {
 		command, err := in.ReadString('\n')
@@ -30,9 +30,12 @@ func main() {
 			switch command {
 
 			case "help\n":
+				fallthrough
+			case "-h\n":
 				comandHandler.PrintHelp()
 
 			case "exit\n":
+				fallthrough
 			case "-q\n":
 				comandHandler.Exit()
 
