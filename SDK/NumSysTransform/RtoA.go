@@ -3,12 +3,15 @@ package NumSysTransform
 import (
 	"cli_calc/SDK/NumSysTransform/model"
 	"errors"
+	"strings"
 )
 
 func RtoA(romanNum string) (int, error) {
 	result := 0
 	countCh := len(romanNum)
 	var vals []int
+
+	romanNum = strings.ToUpper(romanNum)
 
 	if countCh == 1 {
 		ch, ok := model.RomanGlyphs[romanNum]
