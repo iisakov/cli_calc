@@ -1,11 +1,13 @@
 package comandHandler
 
 import (
+	"cli_calc/SDK/NumSysTransform"
 	"cli_calc/SDK/model"
 	"errors"
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 )
 
 func PrintHelp() {
@@ -28,6 +30,19 @@ help, -h: вывести подсказку (данное сообщение)
 exit, -q: завершить работу программы
 version, -v: вывести версию программы
 `)
+}
+
+func PrintResult(result model.Num) (err error) {
+	if result.NumType == "roman" {
+		romanNumResult, err := NumSysTransform.AtoR(result.NumVal)
+		if err != nil {
+			return err
+		}
+		PrintMessage(romanNumResult)
+	} else {
+		PrintMessage(strconv.Itoa(result.NumVal))
+	}
+	return
 }
 
 func PrintMessage(messages ...string) {
@@ -69,12 +84,16 @@ func Exit(messages ...string) {
 	os.Exit(0)
 }
 
-func CheckOperator(s string) (bool, error) {
+func CheckOperator(s string) (string, error) {
 	result, err := regexp.MatchString(`^[\+\-\:\*\/]$`, s)
-	if err != nil {
-		return false, err
+	if !result {
+		err = errors.New("неверный символ действия выражения")
 	}
-	return result, nil
+	if err != nil {
+		return "", err
+	}
+
+	return s, nil
 }
 
 func Calculate(nums [2]model.Num, operator string) (model.Num, error) {

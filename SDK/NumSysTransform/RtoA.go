@@ -8,7 +8,6 @@ import (
 
 func RtoA(romanNum string) (int, error) {
 	result := 0
-
 	romanNum = strings.ToUpper(romanNum)
 	result, ok := model.RomanGlyphs[romanNum]
 	if !ok {
