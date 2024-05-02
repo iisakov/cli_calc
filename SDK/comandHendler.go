@@ -1,8 +1,9 @@
-package comandHandler
+package commandHandler
 
 import (
 	"cli_calc/SDK/NumSysTransform"
 	"cli_calc/SDK/model"
+	"cli_calc/config"
 	"errors"
 	"fmt"
 	"os"
@@ -30,6 +31,29 @@ help, -h: вывести подсказку (данное сообщение)
 exit, -q: завершить работу программы
 version, -v: вывести версию программы
 `)
+}
+
+func Handle(command string) {
+	switch command {
+
+	case "help\n":
+		fallthrough
+	case "-h\n":
+		PrintHelp()
+
+	case "exit\n":
+		fallthrough
+	case "-q\n":
+		Exit()
+
+	case "version\n":
+		fallthrough
+	case "-v\n":
+		PrintMessage("cli_calc [by_artisan] v:" + config.CalcVersion)
+
+	default:
+		PrintError("Неизвестная команда.")
+	}
 }
 
 func PrintResult(result model.Num) (err error) {
