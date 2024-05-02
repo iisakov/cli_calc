@@ -3,12 +3,10 @@ package main
 import (
 	"bufio"
 	comandHandler "cli_calc/SDK"
-	"cli_calc/SDK/NumSysTransform"
 	"cli_calc/SDK/model"
 	"cli_calc/config"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -24,9 +22,9 @@ func main() {
 		if err != nil {
 			comandHandler.PrintErrorAndExit()
 		}
-		comandSlice := strings.Split(command, " ")
+		commandSlice := strings.Split(command, " ")
 
-		if len(comandSlice) == 1 {
+		if len(commandSlice) == 1 {
 
 			switch command {
 
@@ -49,62 +47,39 @@ func main() {
 				comandHandler.PrintError("Неизвестная команда.")
 			}
 
-		} else if len(comandSlice) == 3 {
+		} else if len(commandSlice) == 3 {
 			var nums [2]model.Num
 			var operator string
-			isValidOperator, err := comandHandler.CheckOperator(comandSlice[1])
+
+			operator, err := comandHandler.CheckOperator(commandSlice[1])
 			if err != nil {
-				fmt.Println(err.Error())
 				comandHandler.PrintErrorAndExit(err.Error())
 			}
-			if !isValidOperator {
-				comandHandler.PrintErrorAndExit("Неверный символ действия выражения")
-			} else {
-				operator = comandSlice[1]
 
-			}
-			if nums[0].NumVal, err = strconv.Atoi(comandSlice[0]); err == nil {
-				nums[0].NumType = "digit"
-			} else {
-				nums[0].NumVal, err = NumSysTransform.RtoA(comandSlice[0])
+			for i, commandPart := range []string{commandSlice[0], strings.TrimRight(commandSlice[2], "\n")} {
+				num := new(model.Num)
+				err = num.Creat(commandPart)
 				if err != nil {
 					comandHandler.PrintErrorAndExit(err.Error())
 				}
-				nums[0].NumType = "roman"
-			}
-			if nums[1].NumVal, err = strconv.Atoi(comandSlice[2][:len(comandSlice[2])-1]); err == nil {
-				nums[1].NumType = "digit"
-			} else {
-				nums[1].NumVal, err = NumSysTransform.RtoA(comandSlice[2][:len(comandSlice[2])-1])
-				if err != nil {
-					comandHandler.PrintErrorAndExit(err.Error())
+
+				if num.NumVal > 10 || num.NumVal < 1 {
+					comandHandler.PrintErrorAndExit("Одно из чисел больше 10 или меньше 1.")
 				}
-				nums[1].NumType = "roman"
+
+				nums[i] = *num
 			}
 
 			if nums[0].NumType != nums[1].NumType {
 				comandHandler.PrintErrorAndExit("В выражении используются разные типы чисел")
 			}
 
-			for _, num := range nums {
-				if num.NumVal > 10 || num.NumVal < 1 {
-					comandHandler.PrintErrorAndExit("Одно из чисел больше 10 или меньше 1.")
-				}
-			}
-
 			result, err := comandHandler.Calculate(nums, operator)
 			if err != nil {
 				comandHandler.PrintErrorAndExit(err.Error())
 			}
-			if result.NumType == "roman" {
-				romanNumResult, err := NumSysTransform.AtoR(result.NumVal)
-				if err != nil {
-					comandHandler.PrintErrorAndExit(err.Error())
-				}
-				comandHandler.PrintMessage(romanNumResult)
-			} else {
-				comandHandler.PrintMessage(strconv.Itoa(result.NumVal))
-			}
+
+			comandHandler.PrintResult(result)
 
 		} else {
 			comandHandler.PrintError("Неизвестная команда.")

@@ -48,8 +48,8 @@ func TestCheckRightOperator(t *testing.T) {
 	rightOperators := []string{"+", "-", "*", "/", ":"}
 	for i := 0; i < len(rightOperators); i++ {
 		operator := rightOperators[i]
-		result, _ := comandHandler.CheckOperator(operator)
-		if !result {
+		_, err := comandHandler.CheckOperator(operator)
+		if err != nil {
 			t.Fatalf("Ошибка в валидных данных. %s", operator)
 		}
 	}
@@ -59,8 +59,8 @@ func TestCheckFalseOperator(t *testing.T) {
 	rightOperators := []string{"_", "'", "Деление", "сломата", ""}
 	for i := 0; i < len(rightOperators); i++ {
 		operator := rightOperators[i]
-		result, _ := comandHandler.CheckOperator(operator)
-		if result {
+		_, err := comandHandler.CheckOperator(operator)
+		if err == nil {
 			t.Fatalf("Ошибка в сломаных данных. %s", operator)
 		}
 	}
