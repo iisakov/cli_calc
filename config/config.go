@@ -1,3 +1,3 @@
 package config
 
-var CalcVersion = "2024.05.02:1.0.1"
+var CalcVersion = "2024.05.02:1.0.2"
