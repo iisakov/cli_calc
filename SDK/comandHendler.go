@@ -135,9 +135,6 @@ func Calculate(nums [2]model.Num, operator string) (model.Num, error) {
 		result.NumVal = nums[0].NumVal + nums[1].NumVal
 	case "-":
 		result.NumVal = nums[0].NumVal - nums[1].NumVal
-		if result.NumVal < 1 && result.NumType == "roman" {
-			err = errors.New("результат вычисления римских чисел не может быть меньше единицы")
-		}
 	case "*":
 		result.NumVal = nums[0].NumVal * nums[1].NumVal
 	case ":":
@@ -146,6 +143,10 @@ func Calculate(nums [2]model.Num, operator string) (model.Num, error) {
 		result.NumVal = nums[0].NumVal / nums[1].NumVal
 	default:
 		err = errors.New("при вычислении выражения что-то пошло не так")
+	}
+
+	if result.NumVal < 1 && result.NumType == "roman" {
+		err = errors.New("результат вычисления римских чисел не может быть меньше единицы")
 	}
 
 	return result, err
